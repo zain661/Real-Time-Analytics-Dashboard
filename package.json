@@ -1,0 +1,32 @@
+{
+  "name": "real-time-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zain661/Real-Time-Analytics-Dashboard.git"
+  },
+  "author": "Basma Skaik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zain661/Real-Time-Analytics-Dashboard/issues"
+  },
+  "homepage": "https://github.com/zain661/Real-Time-Analytics-Dashboard#readme",
+  "dependencies": {
+    "bull": "^4.16.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "joi": "^18.0.1",
+    "mysql2": "^3.15.3",
+    "redis": "^5.8.3",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
