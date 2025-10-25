@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001" # Map host 3001 to container 3001
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db # Use service name 'db' instead of 127.0.0.1
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=real_time_analytics_dashboard
+      - DB_PORT=3306
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: real_time_analytics_dashboard
+    ports:
+      - "3306:3306" # MySQL port
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

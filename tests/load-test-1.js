@@ -15,7 +15,7 @@ export default function () {
 
   const headers = { "Content-Type": "application/json" };
 
-  const res = http.post("http://localhost:3000/api/metrics", payload, {
+  const res = http.post("http://localhost:3001/api/metrics", payload, {
     headers,
   });
   check(res, { "status 201": (r) => r.status === 201 });
