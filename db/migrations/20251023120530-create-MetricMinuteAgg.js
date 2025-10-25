@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("MetricMinuteAgg", {
+    await queryInterface.createTable("MetricMinuteAggs", {
       id: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -53,10 +53,14 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
+      deleted_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     });
 
     // Unique constraint for one record per server-metric-minute
-    await queryInterface.addConstraint("MetricMinuteAgg", {
+    await queryInterface.addConstraint("MetricMinuteAggs", {
       fields: ["server_id", "metric_name", "ts_min"],
       type: "unique",
       name: "unique_server_metric_minute",
@@ -64,6 +68,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("MetricMinuteAgg");
+    await queryInterface.dropTable("MetricMinuteAggs");
   },
 };

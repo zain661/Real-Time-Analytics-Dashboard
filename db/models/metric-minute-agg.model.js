@@ -1,8 +1,8 @@
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("MetricRaws", {
+module.exports = (sequelize, Sequelize) => {
+  const MetricMinuteAgg = sequelize.define(
+    "MetricMinuteAggs",
+    {
       id: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -21,17 +21,29 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      value: {
+      ts_min: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      count: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
+      sum: {
         type: Sequelize.DOUBLE,
         allowNull: false,
       },
-      labels: {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
-      ts: {
-        type: Sequelize.DATE(6),
+      min: {
+        type: Sequelize.DOUBLE,
         allowNull: false,
+      },
+      max: {
+        type: Sequelize.DOUBLE,
+        allowNull: false,
+      },
+      p95: {
+        type: Sequelize.DOUBLE,
+        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -45,18 +57,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-    });
+    },
+    {
+      tableName: "MetricMinuteAggs",
+      timestamps: true,
+      paranoid: true,
+      underscored: true,
+    }
+  );
 
-    // Add indexes
-    await queryInterface.addIndex("MetricRaws", [
-      "server_id",
-      "metric_name",
-      "ts",
-    ]);
-    await queryInterface.addIndex("MetricRaws", ["ts"]);
-  },
-
-  async down(queryInterface) {
-    await queryInterface.dropTable("MetricRaws");
-  },
+  return MetricMinuteAgg;
 };

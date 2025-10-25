@@ -24,7 +24,8 @@
     "joi": "^18.0.1",
     "mysql2": "^3.15.3",
     "redis": "^5.8.3",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

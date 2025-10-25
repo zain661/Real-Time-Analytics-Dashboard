@@ -1,8 +1,8 @@
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("MetricRaws", {
+module.exports = (sequelize, Sequelize) => {
+  const MetricRaw = sequelize.define(
+    "MetricRaws",
+    {
       id: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -45,18 +45,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-    });
+    },
+    {
+      tableName: "MetricRaws",
+      timestamps: true,
+      paranoid: true,
+      underscored: true,
+    }
+  );
 
-    // Add indexes
-    await queryInterface.addIndex("MetricRaws", [
-      "server_id",
-      "metric_name",
-      "ts",
-    ]);
-    await queryInterface.addIndex("MetricRaws", ["ts"]);
-  },
-
-  async down(queryInterface) {
-    await queryInterface.dropTable("MetricRaws");
-  },
+  return MetricRaw;
 };
