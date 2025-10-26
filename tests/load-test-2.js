@@ -2,8 +2,8 @@ import http from "k6/http";
 import { check } from "k6";
 
 export let options = {
-  vus: 10,
-  duration: "30s",
+  vus: 100, // 100 virtual users (same as first approach)
+  duration: "1m", // run for 1 minute (same)
   insecureSkipTLSVerify: true, // <--- must be here, not inside http.post
 };
 
