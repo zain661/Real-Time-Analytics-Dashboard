@@ -1,4 +1,4 @@
-const { MetricRaw } = require("../../db/models");
+const { MetricRaw } = require("../../../db/models");
 const aggregateMetrics = require("../utils/aggregateMetrics");
 
 exports.ingestMetric = async (req, res) => {

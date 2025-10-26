@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Real-Time Dashboard</title>
+  <script type="module">
+    import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+
+    // connect to same HTTPS server
+    const socket = io("https://localhost:4001", { transports: ["websocket"] });
+
+    socket.on("metric_update", (data) => {
+      console.log("Real-time metric:", data);
+      const pre = document.getElementById("output");
+      pre.textContent += JSON.stringify(data) + "\n";
+    });
+  </script>
+</head>
+
+<body>
+  <h1>Server Metrics Dashboard</h1>
+  <pre id="output"></pre>
+</body>
+
+</html>

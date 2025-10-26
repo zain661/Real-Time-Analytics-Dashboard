@@ -1,4 +1,4 @@
-const { MetricRaw, MetricMinuteAgg } = require("../../db/models");
+const { MetricRaw, MetricMinuteAgg } = require("../../../db/models");
 const { Op } = require("sequelize");
 
 async function aggregateMetrics(server_id, metric_name) {

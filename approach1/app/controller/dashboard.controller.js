@@ -1,4 +1,4 @@
-const { MetricMinuteAgg } = require("../../db/models");
+const { MetricMinuteAgg } = require("../../../db/models");
 const { Op } = require("sequelize");
 
 exports.getDashboardData = async (req, res) => {

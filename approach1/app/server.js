@@ -8,12 +8,12 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const db = require("././db/models");
+const db = require("../../db/models");
 db.sequelize.sync({ force: false }, { alter: true });
 
-const serverRoutes = require("./app/routes/server.routes");
-const metricRoutes = require("./app/routes/metric.routes");
-const dashboardRoutes = require("./app/routes/dashboard.routes");
+const serverRoutes = require("./routes/server.routes");
+const metricRoutes = require("./routes/metric.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 
 app.use("/api", serverRoutes);
 app.use("/api", metricRoutes);

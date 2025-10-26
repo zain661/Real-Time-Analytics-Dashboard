@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const Joi = require("joi");
-const db = require("../../db/models");
+const db = require("../../../db/models");
 const Server = db.Server;
 
 const serverSchema = Joi.object({

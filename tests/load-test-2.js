@@ -2,21 +2,23 @@ import http from "k6/http";
 import { check } from "k6";
 
 export let options = {
-  vus: 100, // 100 virtual users
-  duration: "1m", // run for 1 minute
+  vus: 10,
+  duration: "30s",
+  insecureSkipTLSVerify: true, // <--- must be here, not inside http.post
 };
 
 export default function () {
   const payload = JSON.stringify({
-    server_id: "471b3dc8-b549-465f-ac45-a341aef7233d",
-    metric_name: "cpu_usage-try",
+    server_id: "356536e2-e9b3-4738-9648-88a10c04d8af",
+    metric_name: "cpu_usage-2",
     value: Math.random(),
   });
 
   const headers = { "Content-Type": "application/json" };
 
-  const res = http.post("http://localhost:3001/api/metrics", payload, {
+  const res = http.post("https://localhost:4001/api/metrics", payload, {
     headers,
   });
+
   check(res, { "status 201": (r) => r.status === 201 });
 }

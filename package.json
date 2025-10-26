@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start1": "nodemon approach1/app/server.js",
+    "start2": "nodemon approach2/app/server.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "mysql2": "^3.15.3",
     "redis": "^5.8.3",
     "sequelize": "^6.37.7",
+    "socket.io": "^4.8.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
