@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start1": "nodemon approach1/app/server.js",
-    "start2": "nodemon approach2/app/server.js"
+    "start2": "nodemon approach2/app/server.js",
+    "start3": "nodemon approach3/app/server.js"
   },
   "repository": {
     "type": "git",
