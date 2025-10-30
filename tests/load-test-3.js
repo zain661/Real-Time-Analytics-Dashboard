@@ -16,7 +16,7 @@ export default function () {
   const headers = { "Content-Type": "application/x-ndjson" };
 
   // POST to the stream endpoint (HTTP/2)
-  const res = http.post("https://localhost:4003/api/stream", payload, {
+  const res = http.post("https://localhost:5001/api/stream", payload, {
     headers,
   });
 

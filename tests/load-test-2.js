@@ -16,7 +16,13 @@ export default function () {
 
   const headers = { "Content-Type": "application/json" };
 
-  const res = http.post("https://localhost:4001/api/metrics", payload, {
+  //without proxy
+  // const res = http.post("https://localhost:4002/api/metrics", payload, {
+  //   headers,
+  // });
+
+  //with proxy
+  const res = http.post("https://localhost:4444/api/metrics", payload, {
     headers,
   });
 

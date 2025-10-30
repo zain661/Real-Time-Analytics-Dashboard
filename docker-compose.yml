@@ -1,15 +1,13 @@
-version: "3.8"
-
 services:
   app:
     build: .
     ports:
-      - "3001:3001" # Map host 3001 to container 3001
+      - "5001:5001"
     depends_on:
       - db
     environment:
       - NODE_ENV=development
-      - DB_HOST=db # Use service name 'db' instead of 127.0.0.1
+      - DB_HOST=db
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_NAME=real_time_analytics_dashboard
@@ -24,9 +22,16 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: real_time_analytics_dashboard
     ports:
-      - "3306:3306" # MySQL port
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
+  h2load:
+  build:
+    context: ./docker-h2load
+  depends_on:
+    - app
+  network_mode: "service:app" # h2load shares network with app container
+
 volumes:
-  mysql_data:
+  mysql_data: {}

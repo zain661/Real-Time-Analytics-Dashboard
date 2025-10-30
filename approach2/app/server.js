@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
 });
 
 // Start server
-const PORT = process.env.PORT2 || 4001;
+const PORT = process.env.PORT || 4002; // fallback only if PORT not set
 server.listen(PORT, () =>
   console.log(`HTTPS/HTTP2 server running on port ${PORT}`)
 );

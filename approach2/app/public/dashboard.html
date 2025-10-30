@@ -7,7 +7,7 @@
     import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
 
     // connect to same HTTPS server
-    const socket = io("https://localhost:4001", { transports: ["websocket"] });
+    const socket = io("https://localhost:4444", { transports: ["websocket"] });
 
     socket.on("metric_update", (data) => {
       console.log("Real-time metric:", data);

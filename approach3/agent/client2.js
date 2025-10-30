@@ -3,7 +3,7 @@ const http2 = require("http2");
 const fs = require("fs");
 const path = require("path");
 
-const client = http2.connect("https://localhost:4002", {
+const client = http2.connect("https://localhost:5001", {
   ca: fs.readFileSync(path.join(__dirname, "../certs/server.crt")),
   rejectUnauthorized: false, // ignore hostname mismatch for local dev
 });

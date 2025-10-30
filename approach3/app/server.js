@@ -54,8 +54,8 @@ global.io = io;
 io.on("connection", () => console.log("Dashboard connected"));
 
 // --- Start servers ---
-const PORT_H2 = process.env.PORT3 || 4002;
-const PORT_DASH = 4003;
+const PORT_H2 = process.env.PORT3 || 5001;
+const PORT_DASH = 5002;
 
 db.sequelize
   .authenticate()

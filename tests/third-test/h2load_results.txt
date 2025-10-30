@@ -1,0 +1,15 @@
+starting benchmark...
+spawning thread #0: 25 total client(s). 250 total requests
+spawning thread #1: 25 total client(s). 250 total requests
+spawning thread #2: 25 total client(s). 250 total requests
+spawning thread #3: 25 total client(s). 250 total requests
+
+finished in 9.63ms, 0.00 req/s, 0B/s
+requests: 1000 total, 0 started, 0 done, 0 succeeded, 1000 failed, 1000 errored, 0 timeout
+status codes: 0 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 0B (0) total, 0B (0) headers (space savings 0.00%), 0B (0) data
+                     min         max         mean         sd        +/- sd
+time for request:        0us         0us         0us         0us     0.00%
+time for connect:        0us         0us         0us         0us     0.00%
+time to 1st byte:        0us         0us         0us         0us     0.00%
+req/s           :       0.00        0.00        0.00        0.00   100.00%
