@@ -59,7 +59,7 @@ server.on("upgrade", (req, socket, head) => {
   });
 });
 
-const PORT = process.env.PROXY_PORT || 4444;
+const PORT = 4444;
 server.listen(PORT, () => {
   console.log(`HTTPS Proxy/Load balancer running at https://localhost:${PORT}`);
   console.log(

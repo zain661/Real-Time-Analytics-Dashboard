@@ -6,16 +6,15 @@
   <title>Approach3 Dashboard</title>
   <script type="module">
     import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
-    const socket = io("https://localhost:5002", { transports: ["websocket"] });
+    const socket = io(location.origin, { transports: ["websocket"] });
     socket.on("metric_update", data => {
-      const out = document.getElementById('out');
-      out.textContent += JSON.stringify(data) + '\n';
+      document.getElementById("out").textContent += JSON.stringify(data) + "\n";
     });
   </script>
 </head>
 
 <body>
-  <h1>Approach3 Real-time</h1>
+  <h1>Approach3 Real-Time Dashboard</h1>
   <pre id="out"></pre>
 </body>
 
