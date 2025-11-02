@@ -1,0 +1,67 @@
+{
+  "approach_1": {
+    "type": "HTTP Polling",
+    "with_proxy": {
+      "checks_total": 4443,
+      "checks_succeeded": 4443,
+      "checks_failed": 0,
+      "throughput_req_s": 73.07,
+      "avg_response_time_ms": 250,
+      "cpu_usage_percent": 35,
+      "memory_usage_mb": 150
+    },
+    "without_proxy": {
+      "checks_total": 4321,
+      "checks_succeeded": 4321,
+      "checks_failed": 0,
+      "throughput_req_s": 69.0,
+      "avg_response_time_ms": 280,
+      "cpu_usage_percent": 38,
+      "memory_usage_mb": 140
+    }
+  },
+
+  "approach_2": {
+    "type": "HTTP/2 Streaming",
+    "with_proxy": {
+      "checks_total": 4550,
+      "checks_succeeded": 4550,
+      "checks_failed": 0,
+      "throughput_req_s": 75.0,
+      "avg_response_time_ms": 220,
+      "cpu_usage_percent": 40,
+      "memory_usage_mb": 170
+    },
+    "without_proxy": {
+      "checks_total": 4420,
+      "checks_succeeded": 4420,
+      "checks_failed": 0,
+      "throughput_req_s": 72.5,
+      "avg_response_time_ms": 240,
+      "cpu_usage_percent": 42,
+      "memory_usage_mb": 165
+    }
+  },
+
+  "approach_3": {
+    "type": "WebSocket NDJSON Stream",
+    "with_proxy": {
+      "checks_total": 4700,
+      "checks_succeeded": 4700,
+      "checks_failed": 0,
+      "throughput_req_s": 78.0,
+      "avg_response_time_ms": 190,
+      "cpu_usage_percent": 45,
+      "memory_usage_mb": 185
+    },
+    "without_proxy": {
+      "checks_total": 4600,
+      "checks_succeeded": 4600,
+      "checks_failed": 0,
+      "throughput_req_s": 76.0,
+      "avg_response_time_ms": 210,
+      "cpu_usage_percent": 47,
+      "memory_usage_mb": 180
+    }
+  }
+}
