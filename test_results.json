@@ -1,67 +1,118 @@
 {
-  "approach_1": {
-    "type": "HTTP Polling",
-    "with_proxy": {
+  "k6_test_results": [
+    {
+      "approach": 1,
+      "proxy": "No",
+      "checks_total": 1698,
+      "checks_succeeded": 1698,
+      "checks_failed": 0,
+      "http_req_duration": {
+        "avg": "3.78s",
+        "min": "1.97s",
+        "med": "3.72s",
+        "max": "7.44s",
+        "p90": "5.61s",
+        "p95": "6.94s"
+      },
+      "http_reqs_per_sec": 26.22,
+      "failures": "0%",
+      "cpu_usage_percent": 30,
+      "memory_mb": 130
+    },
+    {
+      "approach": 1,
+      "proxy": "Yes",
+      "checks_total": 2329,
+      "checks_succeeded": 2329,
+      "checks_failed": 0,
+      "http_req_duration": {
+        "avg": "2.66s",
+        "min": "24.85ms",
+        "med": "2.3s",
+        "max": "8.54s",
+        "p90": "5.9s",
+        "p95": "7.26s"
+      },
+      "http_reqs_per_sec": 36.67,
+      "failures": "0%",
+      "cpu_usage_percent": 30,
+      "memory_mb": 130
+    },
+    {
+      "approach": 2,
+      "proxy": "No",
+      "checks_total": 11414,
+      "checks_succeeded": 11414,
+      "checks_failed": 0,
+      "http_req_duration": {
+        "avg": "521.34ms",
+        "min": "380.08ms",
+        "med": "481.62ms",
+        "max": "1.31s",
+        "p90": "716.1ms",
+        "p95": "762.69ms"
+      },
+      "http_reqs_per_sec": 189.05,
+      "failures": "0%",
+      "cpu_usage_percent": "30–40",
+      "memory_mb": 200
+    },
+    {
+      "approach": 2,
+      "proxy": "Yes",
       "checks_total": 4443,
       "checks_succeeded": 4443,
       "checks_failed": 0,
-      "throughput_req_s": 73.07,
-      "avg_response_time_ms": 250,
-      "cpu_usage_percent": 35,
-      "memory_usage_mb": 150
+      "http_req_duration": {
+        "avg": "981.24ms",
+        "min": "433.4ms",
+        "med": "927.79ms",
+        "max": "2.24s",
+        "p90": "1.14s",
+        "p95": "1.25s"
+      },
+      "http_reqs_per_sec": 73.06,
+      "failures": "0%",
+      "cpu_usage_percent": "30–40",
+      "memory_mb": 200
     },
-    "without_proxy": {
-      "checks_total": 4321,
-      "checks_succeeded": 4321,
+    {
+      "approach": 3,
+      "proxy": "No",
+      "checks_total": 30043,
+      "checks_succeeded": 30043,
       "checks_failed": 0,
-      "throughput_req_s": 69.0,
-      "avg_response_time_ms": 280,
-      "cpu_usage_percent": 38,
-      "memory_usage_mb": 140
-    }
-  },
-
-  "approach_2": {
-    "type": "HTTP/2 Streaming",
-    "with_proxy": {
-      "checks_total": 4550,
-      "checks_succeeded": 4550,
-      "checks_failed": 0,
-      "throughput_req_s": 75.0,
-      "avg_response_time_ms": 220,
-      "cpu_usage_percent": 40,
-      "memory_usage_mb": 170
+      "http_req_duration": {
+        "avg": "199.11ms",
+        "min": "4.56ms",
+        "med": "110.16ms",
+        "max": "1.36s",
+        "p90": "319.52ms",
+        "p95": "958.73ms"
+      },
+      "http_reqs_per_sec": 497.68,
+      "failures": "0%",
+      "cpu_usage_percent": "6–7",
+      "memory_mb": 70
     },
-    "without_proxy": {
-      "checks_total": 4420,
-      "checks_succeeded": 4420,
-      "checks_failed": 0,
-      "throughput_req_s": 72.5,
-      "avg_response_time_ms": 240,
-      "cpu_usage_percent": 42,
-      "memory_usage_mb": 165
+    {
+      "approach": 3,
+      "proxy": "Yes",
+      "checks_total": 1420,
+      "checks_succeeded": 1120,
+      "checks_failed": 300,
+      "http_req_duration": {
+        "avg": "4.46s",
+        "min": "1.9ms",
+        "med": "297.68ms",
+        "max": "30.19s",
+        "p90": "30.02s",
+        "p95": "30.05s"
+      },
+      "http_reqs_per_sec": 22.22,
+      "failures": "21.12%",
+      "cpu_usage_percent": "6–7",
+      "memory_mb": 70
     }
-  },
-
-  "approach_3": {
-    "type": "WebSocket NDJSON Stream",
-    "with_proxy": {
-      "checks_total": 4700,
-      "checks_succeeded": 4700,
-      "checks_failed": 0,
-      "throughput_req_s": 78.0,
-      "avg_response_time_ms": 190,
-      "cpu_usage_percent": 45,
-      "memory_usage_mb": 185
-    },
-    "without_proxy": {
-      "checks_total": 4600,
-      "checks_succeeded": 4600,
-      "checks_failed": 0,
-      "throughput_req_s": 76.0,
-      "avg_response_time_ms": 210,
-      "cpu_usage_percent": 47,
-      "memory_usage_mb": 180
-    }
-  }
+  ]
 }
