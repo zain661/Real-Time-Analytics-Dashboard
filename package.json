@@ -1,12 +1,22 @@
 {
   "name": "real-time-analytics-dashboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real-Time Analytics Dashboard with HTTP/1.1, WebSocket, and HTTP/2 Streaming",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start1": "nodemon approach1/app/server.js",
-    "start2": "nodemon approach2/app/server.js"
+    "start2": "nodemon approach2/app/server.js",
+    "start3": "nodemon approach3/server.js",
+    "simulate3": "node approach3/client_simulator.js",
+    "loadtest3": "node approach3/load-tester.js",
+    "loadtest3-lb": "node approach3/load-tester-lb.js",
+    "loadtest3-client-lb": "node approach3/load-tester-client-lb.js",
+    "loadtest3-high": "node --max-old-space-size=4096 approach3/load-tester-high-scale.js",
+    "dashboard-viewers": "node approach3/dashboard-viewer-simulator.js",
+    "test3": "npm run loadtest3",
+    "dev3": "concurrently \"npm run start3\" \"npm run simulate3\""
   },
   "repository": {
     "type": "git",
@@ -19,10 +29,12 @@
   },
   "homepage": "https://github.com/zain661/Real-Time-Analytics-Dashboard#readme",
   "dependencies": {
+    "async-mutex": "^0.5.0",
     "bull": "^4.16.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "joi": "^18.0.1",
+    "mkcert": "^3.2.0",
     "mysql2": "^3.15.3",
     "redis": "^5.8.3",
     "sequelize": "^6.37.7",
@@ -30,6 +42,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "concurrently": "^8.2.2"
   }
 }

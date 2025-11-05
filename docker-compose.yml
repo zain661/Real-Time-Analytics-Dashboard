@@ -1,32 +1,178 @@
-version: "3.8"
-
 services:
-  app:
-    build: .
-    ports:
-      - "3001:3001" # Map host 3001 to container 3001
-    depends_on:
-      - db
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=db # Use service name 'db' instead of 127.0.0.1
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=real_time_analytics_dashboard
-      - DB_PORT=3306
-    volumes:
-      - .:/app
-      - /app/node_modules
-
+  # ============================================
+  # MySQL Database
+  # ============================================
   db:
     image: mysql:8.0
+    container_name: analytics-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: real_time_analytics_dashboard
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
-      - "3306:3306" # MySQL port
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    restart: always
+    networks:
+      - analytics-network
+
+  # ============================================
+  # Redis
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: analytics-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - analytics-network
+
+  # ============================================
+  # App Instance 1
+  # ============================================
+  app1:
+    build: .
+    container_name: analytics-app1
+    command: npm run start3
+    volumes:
+      - .:/app
+      - /app/node_modules
+    expose:
+      - "4002"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+      INSTANCE_NAME: app1
+    restart: always
+    networks:
+      - analytics-network
+
+  # ============================================
+  # App Instance 2
+  # ============================================
+  app2:
+    build: .
+    container_name: analytics-app2
+    command: npm run start3
+    volumes:
+      - .:/app
+      - /app/node_modules
+    expose:
+      - "4002"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+      INSTANCE_NAME: app2
+    restart: always
+    networks:
+      - analytics-network
+
+  # ============================================
+  # App Instance 3
+  # ============================================
+  app3:
+    build: .
+    container_name: analytics-app3
+    command: npm run start3
+    volumes:
+      - .:/app
+      - /app/node_modules
+    expose:
+      - "4002"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+      INSTANCE_NAME: app3
+    restart: always
+    networks:
+      - analytics-network
+
+  # ============================================
+  # HAProxy Load Balancer
+  # ============================================
+  haproxy:
+    image: haproxy:2.9-alpine
+    container_name: analytics-haproxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404"
+    volumes:
+      - ./approach3/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./approach3/certs:/etc/haproxy/certs:ro
+    depends_on:
+      - app1
+      - app2
+      - app3
+    restart: always
+    networks:
+      - analytics-network
+
+  # ============================================
+  # h2load Testing Container (optional)
+  # ============================================
+  h2load:
+    image: alpine:latest
+    container_name: analytics-h2load
+    command: sh -c "apk add --no-cache nghttp2 && tail -f /dev/null"
+    depends_on:
+      - haproxy
+    networks:
+      - analytics-network
 
 volumes:
   mysql_data:
+  redis_data:
+
+networks:
+  analytics-network:
+    driver: bridge

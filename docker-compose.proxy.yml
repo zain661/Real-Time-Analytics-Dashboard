@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: real-time-analytics-dashboard-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: real_time_analytics_dashboard
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+  
+  # Redis (if needed)
+  redis: 
+    image: redis:6-alpine
+    container_name: real-time-analytics-dashboard-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data 
+
+  # Node.js App Instance 1
+  node1:
+    build: .
+    container_name: real-time-analytics-dashboard-node1
+    command: npm run start3
+    working_dir: /app 
+    environment:
+      NODE_ENV: development
+      REDIS_HOST: redis 
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Node.js App Instance 2
+  node2:
+    build: .
+    container_name: real-time-analytics-dashboard-node2
+    command: npm run start3
+    working_dir: /app 
+    environment:
+      NODE_ENV: development
+      REDIS_HOST: redis 
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Node.js App Instance 3
+  node3:
+    build: .
+    container_name: real-time-analytics-dashboard-node3
+    command: npm run start3
+    working_dir: /app 
+    environment:
+      NODE_ENV: development
+      REDIS_HOST: redis 
+      REDIS_PORT: 6379
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: real_time_analytics_dashboard
+      DB_PORT: 3306
+      HTTP2_PORT: 4002
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: real-time-analytics-dashboard-nginx
+    ports:
+      - "8443:8443"  # Load balancer port
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./approach3/certs:/etc/nginx/ssl:ro
+    depends_on:
+      - node1
+      - node2
+      - node3
+    restart: always
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge
+

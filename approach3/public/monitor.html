@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP/2 Load Test Monitor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      padding: 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 30px; color: #00d4ff; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .card h2 {
+      font-size: 1rem;
+      color: #00d4ff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+    .metric-label { opacity: 0.8; font-size: 0.9rem; }
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00ff88;
+    }
+    .status-healthy { color: #00ff88; }
+    .status-warning { color: #ffaa00; }
+    .status-error { color: #ff4444; }
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-top: 20px;
+    }
+    .update-time {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 HTTP/2 Streaming Load Test Monitor</h1>
+    
+    <div class="grid">
+      <!-- Connections Card -->
+      <div class="card">
+        <h2>🔗 Connections</h2>
+        <div class="metric">
+          <span class="metric-label">Active Streams</span>
+          <span class="metric-value" id="activeStreams">0</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Dashboard Clients</span>
+          <span class="metric-value" id="dashboardClients">0</span>
+        </div>
+      </div>
+      
+      <!-- Throughput Card -->
+      <div class="card">
+        <h2>📈 Throughput</h2>
+        <div class="metric">
+          <span class="metric-label">Metrics/Second</span>
+          <span class="metric-value" id="throughput">0</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Total Processed</span>
+          <span class="metric-value" id="totalProcessed">0</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Total Stored</span>
+          <span class="metric-value" id="totalFlushed">0</span>
+        </div>
+      </div>
+      
+      <!-- Health Card -->
+      <div class="card">
+        <h2>💚 Health Status</h2>
+        <div class="metric">
+          <span class="metric-label">System Status</span>
+          <span class="metric-value" id="health">UNKNOWN</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Buffer Usage</span>
+          <span class="metric-value" id="bufferUsage">0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Drop Rate</span>
+          <span class="metric-value" id="dropRate">0%</span>
+        </div>
+      </div>
+      
+      <!-- System Card -->
+      <div class="card">
+        <h2>💻 System Resources</h2>
+        <div class="metric">
+          <span class="metric-label">Memory (Heap)</span>
+          <span class="metric-value" id="memoryHeap">0 MB</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Uptime</span>
+          <span class="metric-value" id="uptime">0s</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Servers</span>
+          <span class="metric-value" id="uniqueServers">0</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Throughput Chart -->
+    <div class="card">
+      <h2>📊 Real-Time Throughput</h2>
+      <div class="chart-container">
+        <canvas id="throughputChart"></canvas>
+      </div>
+    </div>
+    
+    <div class="update-time">Last updated: <span id="lastUpdate">Never</span></div>
+  </div>
+
+  <script>
+    // Chart setup
+    const ctx = document.getElementById('throughputChart').getContext('2d');
+    const throughputData = {
+      labels: [],
+      datasets: [{
+        label: 'Metrics/Second',
+        data: [],
+        borderColor: '#00ff88',
+        backgroundColor: 'rgba(0, 255, 136, 0.1)',
+        tension: 0.4,
+        fill: true,
+      }]
+    };
+    
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: throughputData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#eee' }
+          },
+          x: {
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            ticks: { color: '#eee' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: '#eee' }
+          }
+        }
+      }
+    });
+    
+    let lastTotalProcessed = 0;
+    let lastUpdateTime = Date.now();
+    
+    // Fetch stats
+    async function fetchStats() {
+      try {
+        const response = await fetch('https://localhost:4002/api/stats');
+        const data = await response.json();
+        
+        // Calculate throughput
+        const now = Date.now();
+        const timeDiff = (now - lastUpdateTime) / 1000; // seconds
+        const metricsDiff = data.buffer.totalProcessed - lastTotalProcessed;
+        const currentThroughput = Math.round(metricsDiff / timeDiff);
+        
+        lastTotalProcessed = data.buffer.totalProcessed;
+        lastUpdateTime = now;
+        
+        // Update metrics
+        document.getElementById('activeStreams').textContent = data.streams.activeStreams;
+        document.getElementById('dashboardClients').textContent = data.sse.connectedClients;
+        document.getElementById('throughput').textContent = currentThroughput.toLocaleString();
+        document.getElementById('totalProcessed').textContent = data.buffer.totalProcessed.toLocaleString();
+        document.getElementById('totalFlushed').textContent = data.buffer.totalFlushed.toLocaleString();
+        
+        // Health status with color
+        const healthEl = document.getElementById('health');
+        healthEl.textContent = data.health.status.toUpperCase();
+        healthEl.className = 'metric-value status-' + data.health.status;
+        
+        document.getElementById('bufferUsage').textContent = data.buffer.bufferUtilization;
+        document.getElementById('dropRate').textContent = data.buffer.dropRate;
+        document.getElementById('memoryHeap').textContent = data.memory.heapUsed;
+        document.getElementById('uptime').textContent = Math.floor(data.uptime) + 's';
+        document.getElementById('uniqueServers').textContent = data.aggregations.servers;
+        
+        // Update chart
+        const time = new Date().toLocaleTimeString();
+        throughputData.labels.push(time);
+        throughputData.datasets[0].data.push(currentThroughput);
+        
+        // Keep only last 30 data points
+        if (throughputData.labels.length > 30) {
+          throughputData.labels.shift();
+          throughputData.datasets[0].data.shift();
+        }
+        
+        chart.update('none'); // Update without animation for smoothness
+        
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      }
+    }
+    
+    // Update every second
+    setInterval(fetchStats, 1000);
+    fetchStats(); // Initial fetch
+  </script>
+</body>
+</html>

@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose your app port
-EXPOSE 3001
+EXPOSE 4002
 
-# Run the app with nodemon (as defined in package.json)
-CMD ["npm", "start"]
+# Run migrations and start the app
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run start3"]
