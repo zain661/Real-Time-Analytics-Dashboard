@@ -33,7 +33,7 @@ Now includes memory optimization automatically.
 ### **Manual:**
 ```powershell
 # With memory flag
-node --max-old-space-size=4096 approach3/load-tester-high-scale.js
+node --max-old-space-size=4096 approach4/load-tester-high-scale.js
 
 # Or use npm script
 npm run loadtest3-high
@@ -43,7 +43,7 @@ npm run loadtest3-high
 
 ## ⚙️ Configuration
 
-Edit `approach3/load-tester-high-scale.js` to adjust:
+Edit `approach4/load-tester-high-scale.js` to adjust:
 
 ```javascript
 const MAX_CONCURRENT_CONNECTIONS = 500; // Increase if you have more RAM

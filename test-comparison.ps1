@@ -98,7 +98,7 @@ Write-Host "Running load test with client-side LB..." -ForegroundColor Cyan
 $env:NUM_SERVERS = $NUM_SERVERS
 $env:DURATION = $DURATION
 
-$output3 = node approach3/load-tester-client-lb.js 2>&1 | Out-String
+$output3 = node approach4/load-tester-client-lb.js 2>&1 | Out-String
 $results['client-lb'] = $output3
 
 Write-Host "✅ Test 3 Complete!" -ForegroundColor Green

@@ -14,7 +14,7 @@ async function generateCertificates() {
 
   try {
     // Create certs directory
-    const certsDir = join(__dirname, 'approach3', 'certs');
+    const certsDir = join(__dirname, 'approach4', 'certs');
     mkdirSync(certsDir, { recursive: true });
     console.log('✅ Created directory:', certsDir);
 
@@ -55,7 +55,7 @@ async function generateCertificates() {
     console.log('✅ CA certificate saved:', caPath);
 
     console.log('\n✨ Certificate generation complete!\n');
-    console.log('📁 Files created in approach3/certs/:');
+    console.log('📁 Files created in approach4/certs/:');
     console.log('   • server-key.pem  (private key)');
     console.log('   • server-cert.pem (server certificate)');
     console.log('   • ca-cert.pem     (CA certificate)\n');

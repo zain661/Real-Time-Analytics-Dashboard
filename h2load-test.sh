@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 TARGET_HOST="https://localhost:443"
-CERT_PATH="/app/approach3/certs/server-cert.pem"
+CERT_PATH="/app/approach4/certs/server-cert.pem"
 
 # ============================================
 # Test 1: Basic Health Check

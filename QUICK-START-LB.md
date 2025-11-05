@@ -27,13 +27,13 @@ This script will:
 #### Step 1: Ensure SSL certificates exist
 ```powershell
 # Check if certificates exist
-if (-not (Test-Path "approach3\certs\server-cert.pem")) {
+if (-not (Test-Path "approach4\certs\server-cert.pem")) {
     node generate-certs.js
 }
 
 # Copy to nginx
-Copy-Item "approach3\certs\server-cert.pem" -Destination "C:\nginx-1.29.3\ssl\my-cert.pem" -Force
-Copy-Item "approach3\certs\server-key.pem" -Destination "C:\nginx-1.29.3\ssl\my-key.pem" -Force
+Copy-Item "approach4\certs\server-cert.pem" -Destination "C:\nginx-1.29.3\ssl\my-cert.pem" -Force
+Copy-Item "approach4\certs\server-key.pem" -Destination "C:\nginx-1.29.3\ssl\my-key.pem" -Force
 ```
 
 #### Step 2: Copy nginx configuration

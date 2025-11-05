@@ -112,7 +112,7 @@ $env:NUM_VIEWERS=250    # Instead of 500
 ```
 
 2. **Increase Retry Count:**
-Edit `approach3/load-tester-high-scale.js`:
+Edit `approach4/load-tester-high-scale.js`:
 ```javascript
 const MAX_CONNECTION_RETRIES = 5; // Increase from 3
 ```

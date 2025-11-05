@@ -147,8 +147,8 @@ services:
       - "443:443"
       - "8404:8404"
     volumes:
-      - ./approach3/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-      - ./approach3/certs:/etc/haproxy/certs:ro
+      - ./approach4/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./approach4/certs:/etc/haproxy/certs:ro
     depends_on:
       - app1
       - app2

@@ -1,6 +1,6 @@
 # Load Balancer Setup Guide
 
-## المطلوب: اختبار approach3 مع وبدون Load Balancer
+## المطلوب: اختبار approach4 مع وبدون Load Balancer
 
 ---
 

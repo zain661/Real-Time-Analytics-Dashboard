@@ -7,8 +7,8 @@ Write-Host ""
 
 # Step 1: Check if SSL certificates exist
 Write-Host "📋 Step 1: Checking SSL certificates..." -ForegroundColor Cyan
-if (-not ((Test-Path "approach3\certs\server-key.pem") -and (Test-Path "approach3\certs\server-cert.pem"))) {
-    Write-Host "❌ SSL certificates not found in approach3\certs\" -ForegroundColor Red
+if (-not ((Test-Path "approach4\certs\server-key.pem") -and (Test-Path "approach4\certs\server-cert.pem"))) {
+    Write-Host "❌ SSL certificates not found in approach4\certs\" -ForegroundColor Red
     Write-Host "💡 Generating certificates..." -ForegroundColor Yellow
     node generate-certs.js
     if ($LASTEXITCODE -ne 0) {
@@ -22,8 +22,8 @@ Write-Host "📋 Copying certificates to nginx..." -ForegroundColor Cyan
 if (-not (Test-Path "C:\nginx-1.29.3\ssl")) {
     New-Item -ItemType Directory -Path "C:\nginx-1.29.3\ssl" -Force | Out-Null
 }
-Copy-Item "approach3\certs\server-cert.pem" -Destination "C:\nginx-1.29.3\ssl\my-cert.pem" -Force
-Copy-Item "approach3\certs\server-key.pem" -Destination "C:\nginx-1.29.3\ssl\my-key.pem" -Force
+Copy-Item "approach4\certs\server-cert.pem" -Destination "C:\nginx-1.29.3\ssl\my-cert.pem" -Force
+Copy-Item "approach4\certs\server-key.pem" -Destination "C:\nginx-1.29.3\ssl\my-key.pem" -Force
 Write-Host "✅ Certificates ready" -ForegroundColor Green
 Write-Host ""
 

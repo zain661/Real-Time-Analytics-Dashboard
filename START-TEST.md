@@ -84,7 +84,7 @@ $env:DURATION=300
 $env:SERVER_PORT=4002
 
 # Run directly
-node --max-old-space-size=4096 approach3/load-tester-high-scale.js
+node --max-old-space-size=4096 approach4/load-tester-high-scale.js
 ```
 
 ---
@@ -103,7 +103,7 @@ Test-Path "test-high-scale.ps1"
 
 # 3. تحقق من ملفات المشروع
 Test-Path "package.json"
-Test-Path "approach3/load-tester-high-scale.js"
+Test-Path "approach4/load-tester-high-scale.js"
 # النتيجة المتوقعة: True
 ```
 

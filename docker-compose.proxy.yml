@@ -113,7 +113,7 @@ services:
       - "8443:8443"  # Load balancer port
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./approach3/certs:/etc/nginx/ssl:ro
+      - ./approach4/certs:/etc/nginx/ssl:ro
     depends_on:
       - node1
       - node2

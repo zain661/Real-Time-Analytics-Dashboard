@@ -52,7 +52,7 @@ $metricsJob = Start-Job -ScriptBlock {
     $env:DURATION = $duration
     $env:SERVER_PORT = $serverPort
     # Increase Node.js heap memory to 4GB
-    node --max-old-space-size=4096 approach3/load-tester-high-scale.js
+    node --max-old-space-size=4096 approach4/load-tester-high-scale.js
 } -ArgumentList $NUM_SERVERS, $DURATION, 4002, $PWD
 
 # Wait 5 seconds, then start dashboard viewers
@@ -69,7 +69,7 @@ $viewersJob = Start-Job -ScriptBlock {
     $env:NUM_VIEWERS = $numViewers
     $env:DURATION = $duration
     $env:SERVER_PORT = $serverPort
-    node approach3/dashboard-viewer-simulator.js
+    node approach4/dashboard-viewer-simulator.js
 } -ArgumentList $NUM_VIEWERS, $DURATION, 4002, $PWD
 
 Write-Host ""
@@ -153,7 +153,7 @@ $metricsJob2 = Start-Job -ScriptBlock {
     $env:DURATION = $duration
     $env:SERVER_PORT = $serverPort
     # Increase Node.js heap memory to 4GB
-    node --max-old-space-size=4096 approach3/load-tester-high-scale.js
+    node --max-old-space-size=4096 approach4/load-tester-high-scale.js
 } -ArgumentList $NUM_SERVERS, $DURATION, 8443, $PWD
 
 # Wait 5 seconds, then start dashboard viewers
@@ -170,7 +170,7 @@ $viewersJob2 = Start-Job -ScriptBlock {
     $env:NUM_VIEWERS = $numViewers
     $env:DURATION = $duration
     $env:SERVER_PORT = $serverPort
-    node approach3/dashboard-viewer-simulator.js
+    node approach4/dashboard-viewer-simulator.js
 } -ArgumentList $NUM_VIEWERS, $DURATION, 8443, $PWD
 
 Write-Host ""
