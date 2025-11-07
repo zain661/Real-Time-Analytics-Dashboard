@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP/2 Streaming Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px 25px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .status-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 5px;
+    }
+    
+    .status-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .connection-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    
+    .connection-status.connected {
+      background: #10b981;
+    }
+    
+    .connection-status.disconnected {
+      background: #ef4444;
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    
+    .metric-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .metric-card.updated {
+      animation: flash 0.5s;
+    }
+    
+    @keyframes flash {
+      0%, 100% { background: rgba(255, 255, 255, 0.15); }
+      50% { background: rgba(34, 197, 94, 0.3); }
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .server-id {
+      font-size: 1.1rem;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+    
+    .metric-type {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 10px;
+    }
+    
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .metric-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .stat-item {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 5px;
+    }
+    
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .timestamp {
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      margin-top: 10px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+    }
+    
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    
+    .empty-state-text {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 HTTP/2 Streaming Dashboard</h1>
+      <p class="subtitle">Real-time Server Metrics with Server-Sent Events</p>
+    </header>
+
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-label">Connection</div>
+        <div class="connection-status disconnected" id="connectionStatus">
+          <span class="status-dot"></span>
+          <span id="statusText">Connecting...</span>
+        </div>
+      </div>
+      
+      <div class="status-item">
+        <div class="status-label">Servers</div>
+        <div class="status-value" id="serverCount">0</div>
+      </div>
+      
+      <div class="status-item">
+        <div class="status-label">Metrics</div>
+        <div class="status-value" id="totalMetrics">0</div>
+      </div>
+      
+      <div class="status-item">
+        <div class="status-label">Updates/sec</div>
+        <div class="status-value" id="updateRate">0</div>
+      </div>
+    </div>
+
+    <div class="metrics-grid" id="metricsContainer">
+      <div class="empty-state">
+        <div class="empty-state-icon">⏳</div>
+        <div class="empty-state-text">Waiting for metrics...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // Configuration
+    // ============================================
+    const SSE_URL = 'https://localhost:4002/api/dashboard/stream';
+    
+    // ============================================
+    // State
+    // ============================================
+    const metricCards = new Map();
+    let totalMetrics = 0;
+    let updateCount = 0;
+    
+    // ============================================
+    // DOM Elements
+    // ============================================
+    const connectionStatus = document.getElementById('connectionStatus');
+    const statusText = document.getElementById('statusText');
+    const serverCountEl = document.getElementById('serverCount');
+    const totalMetricsEl = document.getElementById('totalMetrics');
+    const updateRateEl = document.getElementById('updateRate');
+    const metricsContainer = document.getElementById('metricsContainer');
+    
+    // ============================================
+    // Connect to SSE
+    // ============================================
+    console.log('🔌 Connecting to SSE:', SSE_URL);
+    const eventSource = new EventSource(SSE_URL);
+    
+    // Connection opened
+    eventSource.onopen = () => {
+      console.log('✅ SSE connected');
+      connectionStatus.className = 'connection-status connected';
+      statusText.textContent = 'Connected';
+    };
+    
+    // Connection error
+    eventSource.onerror = (error) => {
+      console.error('❌ SSE error:', error);
+      connectionStatus.className = 'connection-status disconnected';
+      statusText.textContent = 'Disconnected';
+    };
+    
+    // ============================================
+    // Handle 'init' Event (Initial Data)
+    // ============================================
+    eventSource.addEventListener('init', (event) => {
+      console.log('📥 Received init event');
+      const message = JSON.parse(event.data);
+      console.log('Initial data:', message.data.length, 'metrics');
+      
+      message.data.forEach(metric => {
+        updateMetricCard(metric);
+      });
+      
+      removeEmptyState();
+    });
+    
+    // ============================================
+    // Handle 'update' Event (Real-time Updates)
+    // ============================================
+    eventSource.addEventListener('update', (event) => {
+      const message = JSON.parse(event.data);
+      updateCount += message.data.length;
+      
+      message.data.forEach(metric => {
+        updateMetricCard(metric);
+      });
+      
+      removeEmptyState();
+    });
+    
+    // ============================================
+    // Update Metric Card
+    // ============================================
+    function updateMetricCard(metric) {
+      const key = `${metric.server_id}-${metric.metric_name}`;
+      
+      let card = metricCards.get(key);
+      if (!card) {
+        card = createMetricCard(metric);
+        metricCards.set(key, card);
+        metricsContainer.appendChild(card);
+      }
+      
+      // Update values
+      card.querySelector('.metric-value').textContent = metric.avg.toFixed(2);
+      card.querySelector('.stat-value.min').textContent = metric.min.toFixed(2);
+      card.querySelector('.stat-value.max').textContent = metric.max.toFixed(2);
+      card.querySelector('.stat-value.last').textContent = metric.last.toFixed(2);
+      card.querySelector('.stat-value.count').textContent = metric.count;
+      card.querySelector('.timestamp').textContent = new Date(metric.lastUpdate).toLocaleTimeString();
+      
+      // Flash animation
+      card.classList.add('updated');
+      setTimeout(() => card.classList.remove('updated'), 500);
+      
+      // Update stats
+      totalMetrics++;
+      serverCountEl.textContent = new Set(Array.from(metricCards.keys()).map(k => k.split('-')[0])).size;
+      totalMetricsEl.textContent = totalMetrics.toLocaleString();
+    }
+    
+    // ============================================
+    // Create Metric Card
+    // ============================================
+    function createMetricCard(metric) {
+      const card = document.createElement('div');
+      card.className = 'metric-card';
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="server-id" title="${metric.server_id}">${metric.server_id.substring(0, 8)}...</div>
+          <div class="metric-type">${metric.metric_name.replace('_', ' ')}</div>
+        </div>
+        <div class="metric-value">0</div>
+        <div class="metric-stats">
+          <div class="stat-item">
+            <div class="stat-label">Min</div>
+            <div class="stat-value min">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Max</div>
+            <div class="stat-value max">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Last</div>
+            <div class="stat-value last">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Count</div>
+            <div class="stat-value count">0</div>
+          </div>
+        </div>
+        <div class="timestamp">--:--:--</div>
+      `;
+      return card;
+    }
+    
+    // ============================================
+    // Remove Empty State
+    // ============================================
+    function removeEmptyState() {
+      const emptyState = metricsContainer.querySelector('.empty-state');
+      if (emptyState) {
+        emptyState.remove();
+      }
+    }
+    
+    // ============================================
+    // Calculate Update Rate
+    // ============================================
+    setInterval(() => {
+      updateRateEl.textContent = updateCount;
+      updateCount = 0;
+    }, 1000);
+  </script>
+</body>
+</html>

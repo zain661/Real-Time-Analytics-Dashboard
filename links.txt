@@ -1,3 +1,4 @@
 GitHub: https://github.com/zain661/Real-Time-Analytics-Dashboard?tab=readme-ov-file
-Video Demo: https://www.youtube.com/watch?v=Ehv1B8vHIE0
+Video Demo:1- https://www.youtube.com/watch?v=Ehv1B8vHIE0 
+2- approach4: https://www.youtube.com/watch?v=5axCMy2bcEk
 Full Documentation: https://docs.google.com/document/d/11yfWNEMWmaP4somU-wLFJcbeYhU9PhBRZO-rd_e3_4Y/edit?tab=t.0

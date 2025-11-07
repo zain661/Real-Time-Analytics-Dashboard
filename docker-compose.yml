@@ -35,3 +35,71 @@ services:
 
 volumes:
   mysql_data: {}
+
+#for approach4  
+
+#   db:
+#     image: mysql:8.0
+#     container_name: analytics-db
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: real_time_analytics_dashboard
+#     healthcheck:
+#       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+#     expose:
+#       - "3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     restart: always
+#     networks:
+#       - analytics-network
+#   # ============================================
+#   # App Instances
+#   # ============================================
+#   app1:
+#     build: .
+#     container_name: analytics-app1
+#     command: npm run start4
+#     volumes:
+#       - .:/app
+#       - /app/node_modules
+#     ports:
+#       - "4002:4002"
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     environment:
+#       NODE_ENV: production
+#       DB_HOST: db
+#       DB_USER: root
+#       DB_PASSWORD: root
+#       DB_NAME: real_time_analytics_dashboard
+#       DB_PORT: 3306
+#       HTTP2_PORT: 4002
+#       INSTANCE_NAME: app1
+#     restart: always
+#     networks:
+#       - analytics-network
+#   h2load:
+#     image: alpine:latest
+#     container_name: analytics-h2load
+#     command: sh -c "apk add --no-cache nghttp2 curl dos2unix && dos2unix /app/h2load-test.sh && chmod +x /app/h2load-test.sh && /app/h2load-test.sh"
+#     volumes:
+#       - .:/app
+#       - ./approach3/certs:/certs:ro
+#     working_dir: /app
+#     networks:
+#       - analytics-network
+#     depends_on:
+#       app1:
+#         condition: service_started
+#     restart: unless-stopped
+#   volumes:
+#     mysql_data:
+# networks:
+#   analytics-network:
+#     driver: bridge  
+

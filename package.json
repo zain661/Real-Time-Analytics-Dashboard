@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start1": "nodemon approach1/app/server.js",
     "start2": "nodemon approach2/app/server.js",
-    "start3": "nodemon approach3/app/server.js"
+    "start3": "nodemon approach3/app/server.js",
+    "start4": "nodemon approach4/server.js",
+    "simulate4": "node approach4/client_simulator.js",
+    "loadtest4": "node approach4/load-tester.js",
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "concurrently": "^8.2.2"
   }
 }
